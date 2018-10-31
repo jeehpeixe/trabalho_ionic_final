@@ -1,7 +1,7 @@
 import { ApiService } from './../service/api.service';
 import { BancoService } from './../service/banco.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
 import {Camera, CameraOptions} from '@ionic-native/camera/ngx';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -13,7 +13,6 @@ import { isObject } from 'util';
   styleUrls: ['./new.page.scss'],
 })
 export class NewPage implements OnInit {
-
   leitura: boolean;
   titulo: string;
   nome: any;
@@ -23,6 +22,8 @@ export class NewPage implements OnInit {
   foto: any;
   id: number;
   alteracao: boolean;
+
+  @ViewChild('avatarimg') avatar: ElementRef;  
 
   constructor(
     public actionSheetController: ActionSheetController, 
@@ -48,8 +49,7 @@ export class NewPage implements OnInit {
             this.curriculo = retorno.curriculo;
             this.status    = retorno.status;
             this.nascto    = retorno.nascto;
-            //this.foto      = this.sanitizer.bypassSecurityTrustUrl(retorno.foto);
-            this.foto      = retorno.foto;
+            this.foto      = retorno.imagem;
         });
       }
     });
@@ -57,11 +57,7 @@ export class NewPage implements OnInit {
 
   incluir(id?: number){
 
-    let nascimento = this.nascto;
-
-    if (nascimento instanceof Object) {
-      nascimento = new Date(this.nascto.day['text']+'/'+this.nascto.month['text']+'/'+this.nascto.year['text']).toISOString();
-    }
+    let nascimento = this.getNascimentoTratado();
 
     if (id) {
       this.apiService.alteraProfessor(id, this.nome, this.curriculo, this.status, nascimento, this.foto).toPromise().then((ok) => {
@@ -104,11 +100,11 @@ export class NewPage implements OnInit {
 
   abreGaleria() {
     const options: CameraOptions = {
-        quality: 100,
+        quality        : 50,
         destinationType: this.camera.DestinationType.DATA_URL,
-        sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-        encodingType: this.camera.EncodingType.JPEG,
-        mediaType: this.camera.MediaType.PICTURE
+        sourceType     : this.camera.PictureSourceType.PHOTOLIBRARY,
+        encodingType   : this.camera.EncodingType.JPEG,
+        mediaType      : this.camera.MediaType.PICTURE
     }
 
     this.camera.getPicture(options).then((img) => {
@@ -118,10 +114,10 @@ export class NewPage implements OnInit {
 
   abreCamera() {
     const options: CameraOptions = {
-        quality: 50,
+        quality        : 50,
         destinationType: this.camera.DestinationType.DATA_URL,
-        encodingType: this.camera.EncodingType.JPEG,
-        mediaType: this.camera.MediaType.PICTURE
+        encodingType   : this.camera.EncodingType.JPEG,
+        mediaType      : this.camera.MediaType.PICTURE
     }
 
     this.camera.getPicture(options).then((img) => {
@@ -131,6 +127,7 @@ export class NewPage implements OnInit {
 
   adicionaDadosImagem(img){
     this.foto = 'data:image/jpeg;base64,' + img;
+    this.avatar.nativeElement.src = this.foto;
     this.salvaFoto();
   }
 
@@ -138,12 +135,27 @@ export class NewPage implements OnInit {
     if (this.alteracao) {
       return;
     }
+
+    let nascimento = this.getNascimentoTratado();
+
     this.apiService.alteraProfessor(this.id, this.nome, this.curriculo, this.status, this.nascto, this.foto).toPromise().then((ok) => {
-      this.router.navigate(['/list']);
+      this.bancoService.alteraProfessor(this.id, this.nome, this.curriculo, this.status, nascimento, this.foto).then((ret) => {
+        this.router.navigate(['/list']);
+       });
     });
   }
 
   editarProfessor(){
     this.router.navigate(['/new', {id: this.id}]);
+  }
+
+  getNascimentoTratado(){
+    let nascimento = this.nascto;
+
+    if (nascimento instanceof Object) {
+      nascimento = new Date(this.nascto.day['text']+'/'+this.nascto.month['text']+'/'+this.nascto.year['text']).toISOString();
+    }
+
+    return nascimento;
   }
 }

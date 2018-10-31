@@ -18,7 +18,7 @@
     <ion-row>
       <ion-col>
           <ion-avatar>
-            <img name="campofoto" src="foto" (click)="escolherFoto()">
+            <img #avatarimg name="campofoto" [src]="foto" (click)="escolherFoto()">
           </ion-avatar>
       </ion-col>
     </ion-row>
