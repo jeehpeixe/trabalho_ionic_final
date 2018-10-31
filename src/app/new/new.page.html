@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      {{titulo}}
+    </ion-title>
+    <ion-buttons [hidden]='!leitura' slot="end" (click)="editarProfessor(id)">
+      <ion-icon slot="icon-only" name="create"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+
+  <form #cadastroForm="ngForm" (ngSubmit)="incluir(id)" autocomplete="off">
+
+    <ion-row>
+      <ion-col>
+          <ion-avatar>
+            <img name="campofoto" src="foto" (click)="escolherFoto()">
+          </ion-avatar>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col>
+          <ion-item>
+            <ion-label position="stacked">Nome</ion-label>
+            <ion-input required name='camponome' type="text" [disabled]='leitura' [(ngModel)]="nome"></ion-input>
+          </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col>
+          <ion-item>
+              <ion-label position="stacked">Nascimento</ion-label>
+              <ion-datetime required name='camponascimento' [(ngModel)]="nascto" [disabled]='leitura' display-format="DD/MM/YYYY" placeholder="dd/mm/aaaa" picker-format="DD MM YYYY"></ion-datetime>
+          </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">Ativo</ion-label>
+          <ion-toggle name="campoativo" [(ngModel)]="status" [disabled]='leitura' color="success" checked slot="end"></ion-toggle>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col>
+          <ion-item>
+            <ion-label position="stacked">Currículo</ion-label>
+            <ion-textarea required name="campocurriculo" [(ngModel)]="curriculo" [disabled]='leitura' rows="7"></ion-textarea>
+          </ion-item>   
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col>
+          <ion-button [disabled]="!cadastroForm.form.valid" [hidden]='leitura' text-capitalize expand="block" type="submit">Confirmar</ion-button>
+          <ion-button [hidden]='!leitura' text-capitalize expand="block" (click)="excluir(id)">Excluir</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+ </ion-content>
