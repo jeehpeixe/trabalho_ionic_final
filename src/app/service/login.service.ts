@@ -17,4 +17,8 @@ export class LoginService {
   getUsuario(usuario) {
     return this.http.get(`${API_URL}/usuarios/${usuario}`);
   }
+
+  getUsuarioFromEmail(email: string){
+    return this.http.post(`${API_URL}/usuarios`,{email: email});
+  }
 }

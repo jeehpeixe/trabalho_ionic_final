@@ -47,4 +47,12 @@ export class AuthenticationService {
     localStorage.removeItem('usuario');
     localStorage.removeItem('expiry');
   }
+
+  recuperaSenha(email: string){
+    return this.loginService.getUsuarioFromEmail(email).toPromise().then(data => {      
+      return true;
+    }).catch((err) => {
+      return false;
+    });
+  }
 }

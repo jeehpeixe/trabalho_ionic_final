@@ -1,3 +1,4 @@
+import { EmailValidator } from '@angular/forms';
 import { AuthenticationService } from './../service/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -42,7 +43,38 @@ export class LoginPage implements OnInit {
       });
   }
 
-  recuperarSenha(){
+  async recuperarSenha(){
+    const alert = await this.alertController.create({
+      header: 'Esqueceu a senha?', 
+      message: "Digite seu email abaixo:",
+      inputs: [{name: 'email', placeholder: 'E-mail', type: 'email'}],
+      buttons: [
+        {text: 'Cancelar', role: 'cancel'},
+        {text: 'OK', handler: (data) => { 
+          if (!( /(.+)@(.+){2,}\.(.+){2,}/.test(data.email))) {
+            this.exibeAlertaEmail("E-mail Inválido", "Por favor, informe o e-mail em um formato válido!");
+            return;
+          }
+          this.authenticationService.recuperaSenha(data.email).then((valido) => {
+            if (valido) {
+              this.exibeAlertaEmail("Nova Senha Enviada", "Sua nova senha foi enviada para seu e-mail com sucesso!");
+            }
+            else {
+              this.exibeAlertaEmail("Usuário não encontrado", "Este e-mail não foi encontrado na base de dados!");
+            }
+          }); 
+        }}
+      ]
+    });
+    await alert.present();
+  }
 
+  validateEmail(data) {
+    return {isValid: ( /(.+)@(.+){2,}\.(.+){2,}/.test(data.email) )}
+}
+
+  async exibeAlertaEmail(header: string, message: string) {
+    const alert = await this.alertController.create({header: header, message: message, buttons: ['OK']});
+    await alert.present();
   }
 }
