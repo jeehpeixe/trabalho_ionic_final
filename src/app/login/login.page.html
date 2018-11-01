@@ -3,8 +3,14 @@
       <ion-row>
         <ion-col>
           <ion-list>
-              <ion-item>
-                  <ion-label style="font-size: 25px; padding-top: 100px; padding-bottom:20px; text-align:center;">Login</ion-label>
+              <ion-item style="margin-top:50px;">
+                <ion-grid>
+                    <ion-row center>
+                        <ion-col>
+                          <img [src]="caminhoImagem" style="width:160px; height:160px;">
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
               </ion-item>
             <ion-item style="margin:10px;">
               <ion-input placeholder="Usuário" name="username" type="text" required [(ngModel)]="usuario" #email></ion-input>

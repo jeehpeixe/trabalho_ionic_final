@@ -12,6 +12,7 @@ export class LoginPage implements OnInit {
 
   usuario = null;
   senha = null;
+  caminhoImagem = '../assets/img/logo.png';
 
   constructor(
     private route : Router, 
