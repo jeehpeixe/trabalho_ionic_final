@@ -14,7 +14,8 @@
 <ion-content>
 
   <ion-refresher slot="fixed" (ionRefresh)="atualiza($event)">
-      <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content pullingIcon="arrow-dropdown" refreshingSpinner="circles" refreshingText="Atualizando...">
+    </ion-refresher-content>
   </ion-refresher>
 
   <ion-searchbar (ionInput)="getItems($event)" [(ngModel)]="filtro"></ion-searchbar>
