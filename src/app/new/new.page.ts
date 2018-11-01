@@ -11,16 +11,17 @@ import {Camera, CameraOptions} from '@ionic-native/camera/ngx';
   styleUrls: ['./new.page.scss'],
 })
 export class NewPage implements OnInit {
+  avatarpadrao = '../assets/img/avatar.png';
   leitura: boolean;
   titulo: string;
   nome: any;
   nascto: any;
   curriculo: any;
   status: any;
-  foto: any;
+  foto: string = this.avatarpadrao;
   id: number;
   alteracao: boolean;
-
+  
   @ViewChild('avatarimg') avatar: ElementRef;  
 
   constructor(
@@ -47,7 +48,10 @@ export class NewPage implements OnInit {
             this.curriculo = retorno.curriculo;
             this.status    = retorno.status;
             this.nascto    = retorno.nascto;
-            this.foto      = retorno.imagem;
+
+            if (retorno.imagem.length > 0) {
+              this.foto = retorno.imagem;;
+            }
         });
       }
     });
@@ -85,11 +89,18 @@ export class NewPage implements OnInit {
       buttons: [ 
         {text: 'Galeria', icon: 'photos', role: 'destructive', handler: () => { this.abreGaleria(); }}, 
         {text: 'Câmera' , icon: 'camera', role: 'destructive', handler: () => { this.abreCamera(); }},
-        {text: 'Fechar' , icon: 'close',  role: 'cancel'}
+        {text: 'Padrão' , icon: 'photos', role: 'destructive', handler: () => { this.setAvatarPadrao(); }}, 
+        {text: 'Fechar' , icon: 'close',  role: 'cancel',}
       ]
     });
 
     await actionSheet.present();
+  }
+
+  setAvatarPadrao(){
+    this.foto = '../assets/img/avatar.png';
+    this.avatar.nativeElement.src = this.foto;
+    this.salvaFoto();
   }
 
   abreGaleria() {
