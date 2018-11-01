@@ -10,22 +10,21 @@ export class AuthenticationService {
 
   constructor(private loginService: LoginService) { }
 
-  efetuarLogin(usuario, senha): Observable<boolean> {
-
-    var subject = new Subject<boolean>();
-
-    this.loginService.getUsuario(usuario).subscribe(data => {
+  efetuarLogin(usuario, senha) {
+    return this.loginService.getUsuario(usuario).toPromise().then(data => {
       if (data["senha"] == senha) {
         localStorage.setItem('usuario', JSON.stringify(data));
         localStorage.setItem('expiry', moment().add(1, 'h').format());
-        subject.next(true);
+        return true;
       }
       else {
         this.removeSessaoLocalStorage();
-        subject.next(false);
+        return false;
       }
+    }).catch((err) => {
+      this.removeSessaoLocalStorage();
+      return false;
     });
-    return subject.asObservable();
   }
 
   sair(){

@@ -27,17 +27,19 @@ export class LoginPage implements OnInit {
   }
 
   async showAlert(message: string, messageButton = 'OK') {
-    const alert = await this.alertController.create({header: 'Alert', message: message, buttons: [messageButton]});
+    const alert = await this.alertController.create({header: 'Atenção!', message: message, buttons: [messageButton]});
     await alert.present();
   }
 
   login(){
-      if (this.authenticationService.efetuarLogin(this.usuario, this.senha)){
-        this.route.navigate(["list"]);
-      }
-      else {
-        this.showAlert('Usuário ou Senha Inválidos!');
-      }
+      this.authenticationService.efetuarLogin(this.usuario, this.senha).then(valido => {
+        if (valido) {
+          this.route.navigate(["list"]);
+        }
+        else {
+          this.showAlert('Usuário ou Senha Inválidos!');
+        }
+      });
   }
 
   recuperarSenha(){
