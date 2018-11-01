@@ -68,11 +68,7 @@ export class LoginPage implements OnInit {
     });
     await alert.present();
   }
-
-  validateEmail(data) {
-    return {isValid: ( /(.+)@(.+){2,}\.(.+){2,}/.test(data.email) )}
-}
-
+  
   async exibeAlertaEmail(header: string, message: string) {
     const alert = await this.alertController.create({header: header, message: message, buttons: ['OK']});
     await alert.present();
