@@ -2,10 +2,8 @@ import { ApiService } from './../service/api.service';
 import { BancoService } from './../service/banco.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, AlertController } from '@ionic/angular';
 import {Camera, CameraOptions} from '@ionic-native/camera/ngx';
-import {DomSanitizer} from '@angular/platform-browser';
-import { isObject } from 'util';
 
 @Component({
   selector: 'app-new',
@@ -32,7 +30,7 @@ export class NewPage implements OnInit {
     private camera: Camera,
     private apiService: ApiService,
     private router: Router,
-    private sanitizer:DomSanitizer
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -40,7 +38,7 @@ export class NewPage implements OnInit {
 
       this.leitura   = params['id'] && params['visualizacao'];
       this.alteracao = params['id'] && !params['visualizacao'];
-      this.titulo    = !params['id'] ? 'Adicionar' : (params['visualizacao'] ? 'Visualizar' : 'Editar') + ' Professor';
+      this.titulo    = (!params['id'] ? 'Adicionar' : (params['visualizacao'] ? 'Visualizar' : 'Editar')) + ' Professor';
 
       if (params['id']) {
         this.bancoService.getProfessorFromId(params['id']).then((retorno: any)=> {
@@ -74,11 +72,7 @@ export class NewPage implements OnInit {
   }
 
   excluir(id:number){
-    this.apiService.excluiProfessor(this.id).toPromise().then((ok) => {
-      this.bancoService.excluiProfessor(this.id).then((ret) => {
-        this.router.navigate(['/list']);
-      });
-    });
+    this.exibeAlertaExclusao();
   }
 
   async escolherFoto(){
@@ -157,5 +151,26 @@ export class NewPage implements OnInit {
     }
 
     return nascimento;
+  }
+
+  async exibeAlertaExclusao() {
+    const alert = await this.alertController.create(
+      {
+        message: 'Tem certeza que deseja excluir o registro?',
+        buttons: [
+          {text: 'Não', role: 'cancel'},
+          {text: 'Sim', handler: () => {this.processaExclusaoRegistro();}}
+        ]
+      }
+    );
+    await alert.present();
+  }
+
+  processaExclusaoRegistro(){
+    this.apiService.excluiProfessor(this.id).toPromise().then((ok) => {
+      this.bancoService.excluiProfessor(this.id).then((ret) => {
+        this.router.navigate(['/list']);
+      });
+    });
   }
 }

@@ -18,7 +18,7 @@
     <ion-row>
       <ion-col>
           <ion-avatar>
-            <img #avatarimg name="campofoto" [src]="foto" (click)="escolherFoto()">
+            <img #avatarimg name="campofoto" required [src]="foto" (click)="escolherFoto()">
           </ion-avatar>
       </ion-col>
     </ion-row>
@@ -61,8 +61,8 @@
     
     <ion-row>
       <ion-col>
-          <ion-button [disabled]="!cadastroForm.form.valid" [hidden]='leitura' text-capitalize expand="block" type="submit">Confirmar</ion-button>
-          <ion-button [hidden]='!leitura' text-capitalize expand="block" (click)="excluir(id)">Excluir</ion-button>
+          <ion-button color="dark" [disabled]="!cadastroForm.form.valid" [hidden]='leitura' text-capitalize expand="block" type="submit">Confirmar</ion-button>
+          <ion-button color="dark" [hidden]='!leitura' text-capitalize expand="block" (click)="excluir(id)">Excluir</ion-button>
       </ion-col>
     </ion-row>
   </form>

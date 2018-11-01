@@ -10,26 +10,37 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class ListPage implements OnInit, OnDestroy {
 
-  public name: string;
-  public terms: string;
-  public lista = [];
-  public page  = 0;
-  navigationSubscription;
+    name: string;
+    lista = [];
+    page  = 0;
+    filtro: string = '';
+    searchQuery: string = '';
+    navigationSubscription;
+    dados: any;
 
     constructor(private apiService: ApiService, private router: Router, private bancoService: BancoService) {
         this.navigationSubscription = this.router.events.subscribe((e: any) => {
             if (e instanceof NavigationEnd) {
-
-                this.apiService.getAllProfessores().subscribe((data: any) => {
-                    for (let i = 0; i < data.length; i++) {
-                        this.bancoService.insert(
-                            data[i].id, data[i].nome, data[i].nascimento, data[i].curriculo, data[i].status, data[i].foto
-                        );
-                    }
-
-                    this.refresh();
-                });
+                this.filtro = '';
+                this.insereDadosIniciais();
             }
+        });
+    }
+
+    insereDadosIniciais(){
+        var promises = [];
+
+        this.apiService.getAllProfessores().toPromise().then((data: any) => {
+            this.dados = data;
+            for (let i = 0; i < data.length; i++) {
+                promises.push(this.bancoService.insert(
+                    data[i].id, data[i].nome, data[i].nascimento, data[i].curriculo, data[i].status, data[i].foto
+                ));
+            }
+
+            Promise.all(promises).then(() => {
+                this.atualiza();
+            });
         });
     }
 
@@ -41,14 +52,13 @@ export class ListPage implements OnInit, OnDestroy {
         }
     }
 
-    refresh(event?: any) {
+    atualiza(event?: any) {
         this.lista = [];
-        this.page = 0;
-        this.loadProfessorDataFromDB(event);
+        this.page  = 0;
+        this.carregaFromInfinite(event);
     }
 
-    loadProfessorDataFromDB(event?: any) {
-        console.log('buscou');
+    carregaFromInfinite(event?: any) {
         this.bancoService.getProfessoresFromPagina(this.page).then(data => {
             for (const professor of data) {
                 this.lista.push(professor);
@@ -68,8 +78,24 @@ export class ListPage implements OnInit, OnDestroy {
       this.router.navigateByUrl('new'); 
     }
 
-    showProfessorDetails(professor) {
+    alteraProfessor(professor) {
         this.apiService.currentProfessor = professor;
         this.router.navigate(['new', {id: professor.id, visualizacao: true}]);
     }
+
+    getItems(ev: any) {
+        this.lista = [];
+        this.page  = 0;
+    
+        const val = ev.target.value;
+    
+        if (val && val.trim() != '') {
+          this.lista = this.dados.filter((item) => {
+            return (item.nome.toLowerCase().indexOf(val.toLowerCase()) > -1);
+          })
+        }
+        else {
+            this.carregaFromInfinite();
+        }
+      }
 }

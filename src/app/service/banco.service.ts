@@ -29,10 +29,12 @@ export class BancoService {
     }
 
     insert(id, nome, nascto, curriculo, status, imagem) {
-        this.database.executeSql('select * from professores where __id ='+id, []).then((data) => {
+        return this.database.executeSql('select * from professores where __id ='+id, []).then((data) => {
             if (data.rows.length == 0) {
                 let insert = 'INSERT INTO professores(__id, nome, nascto, curriculo, status, imagem) VALUES (?,?,?,?,?,?);'
-                this.database.executeSql(insert, [id, nome, nascto, curriculo, status, imagem]).catch(e => console.log(e));
+                return this.database.executeSql(
+                    insert, [id, nome, nascto, curriculo, status, imagem]
+                ).then(ok => console.log('inc '+id)).catch(e => console.log(e));
             }
         }, 
         err => {
