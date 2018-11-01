@@ -1,4 +1,3 @@
-import { EmailValidator } from '@angular/forms';
 import { AuthenticationService } from './../service/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -46,7 +45,7 @@ export class LoginPage implements OnInit {
   async recuperarSenha(){
     const alert = await this.alertController.create({
       header: 'Esqueceu a senha?', 
-      message: "Digite seu email abaixo:",
+      message: "Digite seu e-mail abaixo:",
       inputs: [{name: 'email', placeholder: 'E-mail', type: 'email'}],
       buttons: [
         {text: 'Cancelar', role: 'cancel'},
@@ -60,7 +59,7 @@ export class LoginPage implements OnInit {
               this.exibeAlertaEmail("Nova Senha Enviada", "Sua nova senha foi enviada para seu e-mail com sucesso!");
             }
             else {
-              this.exibeAlertaEmail("Usuário não encontrado", "Este e-mail não foi encontrado na base de dados!");
+              this.exibeAlertaEmail("Usuário Não Encontrado", "Este e-mail não foi encontrado na base de dados!");
             }
           }); 
         }}
@@ -68,7 +67,7 @@ export class LoginPage implements OnInit {
     });
     await alert.present();
   }
-  
+
   async exibeAlertaEmail(header: string, message: string) {
     const alert = await this.alertController.create({header: header, message: message, buttons: ['OK']});
     await alert.present();
