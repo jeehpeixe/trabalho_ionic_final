@@ -62,7 +62,7 @@
     <ion-row>
       <ion-col>
           <ion-button color="dark" [disabled]="!cadastroForm.form.valid" [hidden]='leitura' text-capitalize expand="block" type="submit">Confirmar</ion-button>
-          <ion-button color="dark" [hidden]='!leitura' text-capitalize expand="block" (click)="excluir(id)">Excluir</ion-button>
+          <ion-button color="danger" [hidden]='!leitura' text-capitalize expand="block" (click)="excluir(id)">Excluir</ion-button>
       </ion-col>
     </ion-row>
   </form>
