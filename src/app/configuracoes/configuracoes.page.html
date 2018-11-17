@@ -1,14 +1,37 @@
 <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title>
-        Configurações
-      </ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon slot="icon-only" name="arrow-back" (click)="voltar()"></ion-icon>
+    </ion-buttons>
+    <ion-title>
+      Configurações
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content padding>
-
+  <form #configForm="ngForm" (ngSubmit)="gravar()">
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item style="margin:10px;">
+            <ion-label>Usuário:</ion-label>
+            <ion-input placeholder="Nome do Usuário do App" name="user" type="text" required [(ngModel)]="usuario"></ion-input>
+          </ion-item>
+          <ion-item style="margin:10px;">
+            <ion-label>Idioma:</ion-label>
+            <ion-select name="idiom" placeholder="Idioma do App" required [(ngModel)]="idioma" cancelText="Cancelar">
+              <ion-select-option value="en-us">en-us</ion-select-option>
+              <ion-select-option value="pt-br">pt-br</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col style="margin:10px;">
+        <ion-button text-capitalize expand="block" type="submit" color="dark" [disabled]="!configForm.form.valid">Confirmar</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
 </ion-content>

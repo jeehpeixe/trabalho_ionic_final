@@ -43,6 +43,12 @@ export class AuthenticationService {
     }
   }
 
+  atualizaTempoSessao(){
+    if (this.isSessaoValida()) {
+      localStorage.setItem('expiry', moment().add(1, 'h').format());
+    }
+  }
+
   removeSessaoLocalStorage(){
     localStorage.removeItem('usuario');
     localStorage.removeItem('expiry');
@@ -52,6 +58,17 @@ export class AuthenticationService {
     return this.loginService.getUsuarioFromEmail(email).toPromise().then(data => {      
       return true;
     }).catch((err) => {
+      return false;
+    });
+  }
+
+  alteraDadosUsuario(nome: string, idioma: string){
+    let user = JSON.parse(localStorage.getItem('usuario')).login;
+    return this.loginService.setUsuario(user, nome, idioma).toPromise().then(data => {
+        localStorage.setItem('usuario', JSON.stringify(data));
+        return true;
+    }).catch((err) => {
+      this.removeSessaoLocalStorage();
       return false;
     });
   }

@@ -18,7 +18,7 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <ion-searchbar (ionInput)="getItems($event)" [(ngModel)]="filtro"></ion-searchbar>
+  <ion-searchbar (ionInput)="getItems($event)" [(ngModel)]="filtro" placeholder="Pesquisar.."></ion-searchbar>
 
   <ion-list>
     <ion-item *ngFor="let professor of lista" (click)="alteraProfessor(professor)" >

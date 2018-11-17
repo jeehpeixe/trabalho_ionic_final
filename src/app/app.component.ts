@@ -1,4 +1,3 @@
-import { BancoService } from './service/banco.service';
 import { AuthenticationService } from './service/authentication.service';
 import { Component } from '@angular/core';
 
@@ -24,10 +23,19 @@ export class AppComponent {
     private statusBar: StatusBar,
     private router: Router,
     private menuController: MenuController,
-    private authenticationService: AuthenticationService,
-    private bancoService: BancoService 
+    private authenticationService: AuthenticationService
   ) {
     this.initializeApp();
+
+    this.platform.ready().then(() => {
+      this.platform.resume.subscribe((result)=>{
+        authenticationService.atualizaTempoSessao();
+      })
+    });
+
+    this.platform.pause.subscribe((result)=>{
+      authenticationService.atualizaTempoSessao();
+    });
   }
 
   initializeApp() {

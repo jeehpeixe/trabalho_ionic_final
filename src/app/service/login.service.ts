@@ -21,4 +21,8 @@ export class LoginService {
   getUsuarioFromEmail(email: string){
     return this.http.post(`${API_URL}/usuarios`,{email: email});
   }
+
+  setUsuario(user: string, nome: string, idioma: string){
+    return this.http.put(`${API_URL}/usuarios/${user}`, {nome: nome, idioma : idioma});
+  }
 }

@@ -1,7 +1,7 @@
 import { ApiService } from './../service/api.service';
 import { BancoService } from './../service/banco.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 
 @Component({
@@ -16,7 +16,7 @@ export class ListPage implements OnInit, OnDestroy {
     page  = 0;
     filtro: string = '';
     searchQuery: string = '';
-    navigationSubscription;
+    navigation;
     dados: any;
 
     private loading;
@@ -31,8 +31,9 @@ export class ListPage implements OnInit, OnDestroy {
             this.loading.dismiss();
         }
         
-        this.navigationSubscription = this.router.events.subscribe((e: any) => {
-            if (e instanceof NavigationEnd) {
+        this.navigation = this.router.events.subscribe((e: any) => {
+            console.log(e);
+            if (e instanceof NavigationEnd && e.url == '/list') {
                 this.presentLoading();
                 this.filtro = '';
                 this.insereDadosIniciais();
@@ -65,8 +66,8 @@ export class ListPage implements OnInit, OnDestroy {
     ngOnInit() {}
 
     ngOnDestroy() {
-        if (this.navigationSubscription) {
-            this.navigationSubscription.unsubscribe();
+        if (this.navigation) {
+            this.navigation.unsubscribe();
         }
     }
 

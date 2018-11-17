@@ -22,6 +22,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     if (this.authenticationService.isSessaoValida()){
+      this.authenticationService.atualizaTempoSessao();
       this.route.navigateByUrl('list');    
     }
   }

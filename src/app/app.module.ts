@@ -39,3 +39,5 @@ import {ImagePicker} from '@ionic-native/image-picker/ngx';
   bootstrap: [AppComponent]
 })
 export class AppModule {}
+
+

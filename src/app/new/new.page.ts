@@ -2,7 +2,7 @@ import { ApiService } from './../service/api.service';
 import { BancoService } from './../service/banco.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import {Camera, CameraOptions} from '@ionic-native/camera/ngx';
 
 @Component({
@@ -31,7 +31,8 @@ export class NewPage implements OnInit {
     private camera: Camera,
     private apiService: ApiService,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private toastController: ToastController
   ) {}
 
   ngOnInit() {
@@ -50,7 +51,7 @@ export class NewPage implements OnInit {
             this.nascto    = retorno.nascto;
 
             if (retorno.imagem.length > 0) {
-              this.foto = retorno.imagem;;
+              this.foto = retorno.imagem;
             }
         });
       }
@@ -64,15 +65,26 @@ export class NewPage implements OnInit {
     if (id) {
       this.apiService.alteraProfessor(id, this.nome, this.curriculo, this.status, nascimento, this.foto).toPromise().then((ok) => {
         this.bancoService.alteraProfessor(id, this.nome, this.curriculo, this.status, nascimento, this.foto).then((ret) => {
+         this.exibirToast();
          this.router.navigate(['/list']);
         });
       });
     }
     else {
       this.apiService.insereProfessor(this.nome, this.curriculo, this.status, nascimento, this.foto).toPromise().then((ok) => {
+        this.exibirToast();
         this.router.navigate(['/list']);
       });
     }
+  }
+
+  async exibirToast() {
+    let toast = await this.toastController.create({
+      message: 'Registro ' + (this.alteracao ? 'alterado' : 'incluído')+ ' com sucesso!',
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();
   }
 
   excluir(id:number){
@@ -80,10 +92,6 @@ export class NewPage implements OnInit {
   }
 
   async escolherFoto(){
-    if (this.leitura){
-      return;
-    }
-
     const actionSheet = await this.actionSheetController.create({
       header: 'Fotos',
       buttons: [ 
@@ -140,13 +148,10 @@ export class NewPage implements OnInit {
     if (this.alteracao) {
       return;
     }
-
     let nascimento = this.getNascimentoTratado();
 
     this.apiService.alteraProfessor(this.id, this.nome, this.curriculo, this.status, this.nascto, this.foto).toPromise().then((ok) => {
-      this.bancoService.alteraProfessor(this.id, this.nome, this.curriculo, this.status, nascimento, this.foto).then((ret) => {
-        this.router.navigate(['/list']);
-       });
+      this.bancoService.alteraProfessor(this.id, this.nome, this.curriculo, this.status, nascimento, this.foto);
     });
   }
 
@@ -183,5 +188,14 @@ export class NewPage implements OnInit {
         this.router.navigate(['/list']);
       });
     });
+  }
+
+  voltar(){
+    if (this.alteracao) {
+      this.router.navigate(['/new', {id: this.id, visualizacao: true}]);
+    }
+    else {
+      this.router.navigate(['/list']);
+    }
   }
 }
