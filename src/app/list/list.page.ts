@@ -2,7 +2,7 @@ import { ApiService } from './../service/api.service';
 import { BancoService } from './../service/banco.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-list',
@@ -25,19 +25,21 @@ export class ListPage implements OnInit, OnDestroy {
         private apiService: ApiService, 
         private router: Router, 
         private bancoService: BancoService,
-        public loadingController: LoadingController
+        public loadingController: LoadingController,
+        private platform: Platform
     ) {
         if (this.loading) {
             this.loading.dismiss();
         }
         
         this.navigation = this.router.events.subscribe((e: any) => {
-            console.log(e);
-            if (e instanceof NavigationEnd && e.url == '/list') {
-                this.presentLoading();
-                this.filtro = '';
-                this.insereDadosIniciais();
-            }
+            this.platform.ready().then((ok) => {    
+                if (e instanceof NavigationEnd && e.url == '/list') {
+                    this.presentLoading();
+                    this.filtro = '';
+                    this.insereDadosIniciais();
+                }
+            });
         });
     }
 
