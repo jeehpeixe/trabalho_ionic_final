@@ -97,7 +97,7 @@ export class NewPage implements OnInit {
       buttons: [ 
         {text: 'Galeria', icon: 'photos', role: 'destructive', handler: () => { this.abreGaleria(); }}, 
         {text: 'Câmera' , icon: 'camera', role: 'destructive', handler: () => { this.abreCamera(); }},
-        {text: 'Padrão' , icon: 'photos', role: 'destructive', handler: () => { this.setAvatarPadrao(); }}, 
+        {text: 'Padrão' , icon: 'person', role: 'destructive', handler: () => { this.setAvatarPadrao(); }}, 
         {text: 'Fechar' , icon: 'close',  role: 'cancel',}
       ]
     });
